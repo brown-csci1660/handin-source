@@ -1,0 +1,17 @@
+*~
+\#*#
+.\#*
+
+*.o
+
+.DS_Store
+
+.vagrant/
+
+.image-version
+
+.vagrant/
+.vscode
+.gitconfig
+.bash_history
+
