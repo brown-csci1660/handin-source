@@ -1,3 +1,13 @@
+// main.go - CS666 Ivy assignment
+//
+// **WARNING**: when submitting to the autograder, this file is
+// removed and replaced with a TA version.  Any changes you make to
+// this file will be overridden and may break compatibility with the
+// autograder (if your other files depend on them).
+//
+// In other words: you can add print statements or other debugging
+// code to this file, but don't change the names/args/return of any
+// functions or the autograder won't be able to compile your code!
 package main
 
 import (
@@ -11,7 +21,7 @@ import (
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, "Usage: %v <key>\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %v <test key>\n", os.Args[0])
 		os.Exit(1)
 	}
 	bytes, err := hex.DecodeString(os.Args[1])
@@ -29,17 +39,19 @@ func main() {
 	oracle := makeOracle(k)
 	firstIV, firstCiphertext := oracle(k[:])
 
-	fmt.Print("Running attack... ")
+	fmt.Println("Running attack... ")
+	fmt.Println("*************************")
 	t0 := time.Now()
 	recoveredK := performAttack(oracle, firstIV, firstCiphertext)
 	t1 := time.Now()
-	fmt.Printf("completed in %v\n", t1.Sub(t0))
+	fmt.Println("*************************")
+	fmt.Printf("Runtime:  %v\n", t1.Sub(t0))
 	if recoveredK == k {
 		fmt.Println("Key successfully recovered.")
 	} else {
 		fmt.Println("ERROR: Wrong key recovered:")
-		fmt.Printf("got  %v\n", hex.EncodeToString(recoveredK[:]))
-		fmt.Printf("want %v\n", hex.EncodeToString(k[:]))
+		fmt.Printf("Expected  %v\n", hex.EncodeToString(recoveredK[:]))
+		fmt.Printf("Found %v\n", hex.EncodeToString(k[:]))
 	}
 }
 

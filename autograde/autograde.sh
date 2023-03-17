@@ -10,6 +10,15 @@ STUDENT_USERNAME="$2"
 
 umask 000
 
+SUPPORT_CODE=/course/cs666/autograde/stencils/$ASSIGNMENT
+
+# Remove any stencil files the student submitted
+# (we'll replace with our own versions from the support code)
+for f in $SUPPORT_CODE/*; do
+    echo "Removing stencil file $(basename $f)"
+    rm -f ./$(basename $f)
+done
+
 # figure out what .go files there are before
 # copying in stencil code so that we don't
 # blocklist imports in our own code
@@ -20,9 +29,10 @@ if [ "$GO_FILES" == "*.go" ]; then
 	exit 1
 fi
 
-# copy framework code
-cp /course/cs666/autograde/stencils/$ASSIGNMENT/* .
+# copy framework code into student submission dir
+cp $SUPPORT_CODE/* .
 
+# Remove potentially-dangerous imports
 /course/cs666/tabin/blocklist_imports $GO_FILES || exit 1
 
 # recalculate to include our .go files this time
